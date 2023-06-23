@@ -1,0 +1,80 @@
+From 8a95496ed2b560749afb24c98768f915a54b4611 Mon Sep 17 00:00:00 2001
+From: hienhuynh <hien.huynh.px@renesas.com>
+Date: Wed, 2 Jun 2021 14:50:34 +0700
+Subject: [PATCH 1/6] media: i2c: ov5645: support SBGGR8 format instead of UYVY
+
+Signed-off-by: hienhuynh <hien.huynh.px@renesas.com>
+---
+ drivers/media/i2c/ov5645.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+index a6c17d15d754..8c2a99a9db52 100644
+--- a/drivers/media/i2c/ov5645.c
++++ b/drivers/media/i2c/ov5645.c
+@@ -191,7 +191,7 @@ static const struct reg_value ov5645_global_init_setting[] = {
+ 	{ 0x5000, 0xa7 },
+ 	{ 0x5001, 0x83 },
+ 	{ 0x501d, 0x00 },
+-	{ 0x501f, 0x00 },
++	{ 0x501f, 0x03 },
+ 	{ 0x503d, 0x00 },
+ 	{ 0x505c, 0x30 },
+ 	{ 0x5181, 0x59 },
+@@ -405,7 +405,7 @@ static const struct reg_value ov5645_setting_sxga[] = {
+ 	{ 0x3a18, 0x00 },
+ 	{ 0x4004, 0x02 },
+ 	{ 0x4005, 0x18 },
+-	{ 0x4300, 0x32 },
++	{ 0x4300, 0x03 },
+ 	{ 0x4202, 0x00 }
+ };
+ 
+@@ -454,7 +454,7 @@ static const struct reg_value ov5645_setting_1080p[] = {
+ 	{ 0x3a18, 0x00 },
+ 	{ 0x4004, 0x06 },
+ 	{ 0x4005, 0x18 },
+-	{ 0x4300, 0x32 },
++	{ 0x4300, 0x03 },
+ 	{ 0x4202, 0x00 },
+ 	{ 0x4837, 0x0b }
+ };
+@@ -504,7 +504,7 @@ static const struct reg_value ov5645_setting_full[] = {
+ 	{ 0x3a18, 0x01 },
+ 	{ 0x4004, 0x06 },
+ 	{ 0x4005, 0x18 },
+-	{ 0x4300, 0x32 },
++	{ 0x4300, 0x03 },
+ 	{ 0x4837, 0x0b },
+ 	{ 0x4202, 0x00 }
+ };
+@@ -843,7 +843,7 @@ static int ov5645_enum_mbus_code(struct v4l2_subdev *sd,
+ 	if (code->index > 0)
+ 		return -EINVAL;
+ 
+-	code->code = MEDIA_BUS_FMT_UYVY8_2X8;
++	code->code = MEDIA_BUS_FMT_SBGGR8_1X8;
+ 
+ 	return 0;
+ }
+@@ -852,7 +852,7 @@ static int ov5645_enum_frame_size(struct v4l2_subdev *subdev,
+ 				  struct v4l2_subdev_pad_config *cfg,
+ 				  struct v4l2_subdev_frame_size_enum *fse)
+ {
+-	if (fse->code != MEDIA_BUS_FMT_UYVY8_2X8)
++	if (fse->code != MEDIA_BUS_FMT_SBGGR8_1X8)
+ 		return -EINVAL;
+ 
+ 	if (fse->index >= ARRAY_SIZE(ov5645_mode_info_data))
+@@ -946,7 +946,7 @@ static int ov5645_set_format(struct v4l2_subdev *sd,
+ 			format->which);
+ 	__format->width = __crop->width;
+ 	__format->height = __crop->height;
+-	__format->code = MEDIA_BUS_FMT_UYVY8_2X8;
++	__format->code = MEDIA_BUS_FMT_SBGGR8_1X8;
+ 	__format->field = V4L2_FIELD_NONE;
+ 	__format->colorspace = V4L2_COLORSPACE_SRGB;
+ 
+-- 
+2.25.1
+
